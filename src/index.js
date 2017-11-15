@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import styled from 'styled-components';
+import Card from './Card';
 
-let era = [
+const era = [
   60, 70, 80, 90, 2000
-]
+];
 
-let genres = [
+const genres = [
   'Rock', 'Pop', 'Jazz', 'Country', 'Alternative', 'Rap'
-]
+];
 
-let challenges = [
+const challenges = [
   'LikeElvis',
   'Parent\'s favourite songs',
   'Too high for me',
@@ -20,8 +21,17 @@ let challenges = [
   'This is out of my range',
   'Title contains boy or girl',
   'Refers to crime'
-]
+];
 
+const Container = styled.div`
+  text-align: center;
+`;
+const Button = styled.button`
+  padding: 25px;
+  border-radius: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+`;
 
 class Karaoke extends Component {
   state = {
@@ -29,7 +39,7 @@ class Karaoke extends Component {
     challenge: '',
     bgColor: '#4286f4',
     image: ''
-  }
+  };
 
   selectEasy = () => {
     const genreSelected = genres[Math.floor(Math.random() * genres.length)];
@@ -40,7 +50,7 @@ class Karaoke extends Component {
       image: '',
       challenge: `The Challenge is ${challengeSelected}`
     });
-  }
+  };
 
   selectHard = () => {
     const genreSelected = genres[Math.floor(Math.random() * genres.length)];
@@ -50,38 +60,32 @@ class Karaoke extends Component {
       genre: `The genre is ${genreSelected} ${eraSelected}'s`,
       challenge: this.shuffle().slice(0, 2).join(' & '),
     });
-  }
+  };
 
   shuffle = () => challenges.reduce((a,v)=>a.splice(Math.floor(Math.random() * a.length), 0, v) && a, []);
 
   passed = () => {
     this.setState({"image": "https://media.giphy.com/media/l4FGmu1ZS5URUhibS/giphy.gif"})
-  }
+  };
 
   failed = () => {
     this.setState({"image": "https://media.giphy.com/media/l4FGHnc08HpNREIaQ/giphy.gif"})
-  }
+  };
 
   render = () => {
-    const { genre, challenge, image, bgColor } = this.state;
+    const { bgColor, genre, challenge, image } = this.state;
     return(
-      <div>
+      <Container>
         <h1>Karaoke Challenge</h1>
-        <h2>{genre}</h2>
-        <h2>{challenge}</h2>
-        {
-          image &&
-            <img src={image} alt="none" height='200px' width='300px' />
-        }
-        <button id='easyButton' onClick={this.selectEasy} style={{ backgroundColor: bgColor }}>Easy</button>
-        <button id='hardButton' onClick={this.selectHard}>Hard</button>
-        <button id='passedButton' onClick={this.passed}>Passed!</button>
-        <button id='failedButton' onClick={this.failed}>Failed!</button>
-      </div>
+        <Card genre={genre} challenge={challenge} image={image} />
+        <Button onClick={this.selectEasy} style={{ backgroundColor: bgColor }}>Easy</Button>
+        <Button onClick={this.selectHard}>Hard</Button>
+        <Button onClick={this.passed}>Passed!</Button>
+        <Button onClick={this.failed}>Failed!</Button>
+      </Container>
     )
-  }
+  };
 
 }
-
 
 ReactDOM.render(<Karaoke />, document.getElementById('root'));
