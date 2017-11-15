@@ -6,11 +6,11 @@ let era = [
   60, 70, 80, 90, 2000
 ]
 
-let genre = [
+let genres = [
   'Rock', 'Pop', 'Jazz', 'Country', 'Alternative', 'Rap'
 ]
 
-let challenge = [
+let challenges = [
   'LikeElvis',
   'Parent\'s favourite songs',
   'Too high for me',
@@ -24,49 +24,35 @@ let challenge = [
 
 
 class Karaoke extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      'easy': '',
-      'easyChallenge': '',
-      'hard': '',
-      'hardChallenge': '',
-      'hardEra': '',
-      'bgColor': '#4286f4',
-      'image': ''
-    }
-  };
-
-  selectEasy = () => {
-    let genreSelected = [];
-    let challengeSelected = [];
-    genreSelected.push(genre[Math.floor(Math.random() * genre.length)]);
-    this.setState({"easy": 'The genre is ' + genreSelected});
-    this.setState({"bgColor": "#19e537"});
-    this.setState({"image": ''});
-
-    challengeSelected.push(challenge[Math.floor(Math.random() * challenge.length)]);
-    this.setState({"easyChallenge": 'The Challenge is ' + challengeSelected});
+  state = {
+    genre: '',
+    challenge: '',
+    bgColor: '#4286f4',
+    image: ''
   }
 
-  selectHard = () => {
-    this.shuffle();
-    const genreSelected = genre[Math.floor(Math.random() * genre.length)];
-    const eraSelected = era[Math.floor(Math.random() * era.length)]
-    // console.log(challengeSelected);
+  selectEasy = () => {
+    const genreSelected = genres[Math.floor(Math.random() * genres.length)];
+    const challengeSelected = challenges[Math.floor(Math.random() * challenges.length)];
     this.setState({
+      genre: `The genre is ${genreSelected}`,
+      bgColor: "#19e537",
       image: '',
-      easy: `The genre is ${genreSelected} ${eraSelected}'s`,
-      easyChallenge: challenge.slice(0, 2).join(' & '),
+      challenge: `The Challenge is ${challengeSelected}`
     });
   }
 
-  shuffle = () => {
-    for (let i = challenge.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [challenge[i], challenge[j]] = [challenge[j], challenge[i]];
-    }
+  selectHard = () => {
+    const genreSelected = genres[Math.floor(Math.random() * genres.length)];
+    const eraSelected = era[Math.floor(Math.random() * era.length)]
+    this.setState({
+      image: '',
+      genre: `The genre is ${genreSelected} ${eraSelected}'s`,
+      challenge: this.shuffle().slice(0, 2).join(' & '),
+    });
   }
+
+  shuffle = () => challenges.reduce((a,v)=>a.splice(Math.floor(Math.random() * a.length), 0, v) && a, []);
 
   passed = () => {
     this.setState({"image": "https://media.giphy.com/media/l4FGmu1ZS5URUhibS/giphy.gif"})
@@ -77,20 +63,17 @@ class Karaoke extends Component {
   }
 
   render = () => {
-    const { easy, easyChallenge, image, bgColor } = this.state;
-    // .map((word, i) => <span key={i} style={{ margin: '0 5px' }}>{word}</span>)}
-    // <h2>{this.state.hard} {this.state.hardEra}</h2>
-    // <h2>{this.state.hardChallenge}</h2>
+    const { genre, challenge, image, bgColor } = this.state;
     return(
       <div>
         <h1>Karaoke Challenge</h1>
-        <h2>{easy}</h2>
-        <h2>{easyChallenge}</h2>
+        <h2>{genre}</h2>
+        <h2>{challenge}</h2>
         {
           image &&
             <img src={image} alt="none" height='200px' width='300px' />
         }
-        <button id='easyButton' onClick={this.selectEasy} style={{backgroundColor: bgColor}}>Easy</button>
+        <button id='easyButton' onClick={this.selectEasy} style={{ backgroundColor: bgColor }}>Easy</button>
         <button id='hardButton' onClick={this.selectHard}>Hard</button>
         <button id='passedButton' onClick={this.passed}>Passed!</button>
         <button id='failedButton' onClick={this.failed}>Failed!</button>
