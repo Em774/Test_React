@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
@@ -23,7 +23,7 @@ let challenge = [
 ]
 
 
-class Karaoke extends React.Component {
+class Karaoke extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -50,31 +50,22 @@ class Karaoke extends React.Component {
   }
 
   selectHard = () => {
-    let genreSelected = [];
-    let challengeSelected = [];
-    let eraSelected = [];
-    genreSelected.push(genre[Math.floor(Math.random() * genre.length)]);
-    eraSelected.push(era[Math.floor(Math.random() * era.length)]);
-
-    challengeSelected.push(challenge.slice(0, 2));
-    console.log(challengeSelected);
-
-    this.setState({"image": ''});
-    this.setState({"hard": "The genre is " + genreSelected});
-    this.setState({"hardEra": eraSelected + '\'s'});
-    this.setState({"hardChallenge": challengeSelected});
+    this.shuffle();
+    const genreSelected = genre[Math.floor(Math.random() * genre.length)];
+    const eraSelected = era[Math.floor(Math.random() * era.length)]
+    // console.log(challengeSelected);
+    this.setState({
+      image: '',
+      easy: `The genre is ${genreSelected} ${eraSelected}'s`,
+      easyChallenge: challenge.slice(0, 2).join(' & '),
+    });
   }
 
-  shuffle = (challenge) => {
+  shuffle = () => {
     for (let i = challenge.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [challenge[i], challenge[j]] = [challenge[j], challenge[i]];
     }
-  }
-
-  click = () => {
-    this.selectHard();
-    this.shuffle(challenge);
   }
 
   passed = () => {
@@ -86,16 +77,21 @@ class Karaoke extends React.Component {
   }
 
   render = () => {
+    const { easy, easyChallenge, image, bgColor } = this.state;
+    // .map((word, i) => <span key={i} style={{ margin: '0 5px' }}>{word}</span>)}
+    // <h2>{this.state.hard} {this.state.hardEra}</h2>
+    // <h2>{this.state.hardChallenge}</h2>
     return(
       <div>
         <h1>Karaoke Challenge</h1>
-        <h2>{this.state.easy} </h2>
-        <h2>{this.state.easyChallenge} </h2>
-        <h2>{this.state.hard} {this.state.hardEra}</h2>
-        <h2>{this.state.hardChallenge} </h2>
-        <img src={this.state.image} alt="none" height='200px' width='300px'></img>
-        <button id='easyButton' onClick={this.selectEasy} style={{backgroundColor: this.state.bgColor}}>Easy</button>
-        <button id='hardButton' onClick={this.click}>Hard</button>
+        <h2>{easy}</h2>
+        <h2>{easyChallenge}</h2>
+        {
+          image &&
+            <img src={image} alt="none" height='200px' width='300px' />
+        }
+        <button id='easyButton' onClick={this.selectEasy} style={{backgroundColor: bgColor}}>Easy</button>
+        <button id='hardButton' onClick={this.selectHard}>Hard</button>
         <button id='passedButton' onClick={this.passed}>Passed!</button>
         <button id='failedButton' onClick={this.failed}>Failed!</button>
       </div>
