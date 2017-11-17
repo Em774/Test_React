@@ -2,26 +2,12 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import Card from './Card';
-
-const era = [
-  60, 70, 80, 90, 2000
-];
-
-const genres = [
-  'Rock', 'Pop', 'Jazz', 'Country', 'Alternative', 'Rap'
-];
-
-const challenges = [
-  'LikeElvis',
-  'Parent\'s favourite songs',
-  'Too high for me',
-  'Artist beginning with B',
-  'Artist beginning with E',
-  'Artist beginning with R',
-  'This is out of my range',
-  'Title contains boy or girl',
-  'Refers to crime'
-];
+import {
+  colors,
+  era,
+  genres,
+  challenges
+} from './constants';
 
 const Container = styled.div`
   text-align: center;
@@ -35,10 +21,12 @@ const Button = styled.button`
 
 class Karaoke extends Component {
   state = {
-    genre: '',
-    challenge: '',
-    bgColor: '#4286f4',
-    image: ''
+    genre: 'made with love by',
+    challenge: 'Emilie and Olly',
+    bgButton: colors.OTHER_BLUE,
+    image: '',
+    bgCard: '',
+    cardLevel: ''
   };
 
   selectEasy = () => {
@@ -46,9 +34,11 @@ class Karaoke extends Component {
     const challengeSelected = challenges[Math.floor(Math.random() * challenges.length)];
     this.setState({
       genre: `The genre is ${genreSelected}`,
-      bgColor: "#19e537",
+      bgButton: colors.BLUE,
       image: '',
-      challenge: `The Challenge is ${challengeSelected}`
+      challenge: `The Challenge is ${challengeSelected}`,
+      // bgCard: colors.HORRIBLE_GREEN
+      cardLevel: 'easy'
     });
   };
 
@@ -59,6 +49,8 @@ class Karaoke extends Component {
       image: '',
       genre: `The genre is ${genreSelected} ${eraSelected}'s`,
       challenge: this.shuffle().slice(0, 2).join(' & '),
+      // bgCard: colors.OTHER_BLUE
+      cardLevel: 'hard'
     });
   };
 
@@ -72,13 +64,18 @@ class Karaoke extends Component {
     this.setState({"image": "https://media.giphy.com/media/l4FGHnc08HpNREIaQ/giphy.gif"})
   };
 
+
   render = () => {
-    const { bgColor, genre, challenge, image } = this.state;
     return(
       <Container>
         <h1>Karaoke Challenge</h1>
-        <Card genre={genre} challenge={challenge} image={image} />
-        <Button onClick={this.selectEasy} style={{ backgroundColor: bgColor }}>Easy</Button>
+        <Card
+          genre={this.state.genre}
+          challenge={this.state.challenge}
+          image={this.state.image}
+          background={this.state.cardLevel}
+        />
+        <Button onClick={this.selectEasy} style={{ backgroundColor: this.state.bgButton }}>Easy</Button>
         <Button onClick={this.selectHard}>Hard</Button>
         <Button onClick={this.passed}>Passed!</Button>
         <Button onClick={this.failed}>Failed!</Button>
